@@ -10,6 +10,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddRazorPages();
 builder.Services.AddSingleton<IBlobStorageService, BlobStorageService>();
+builder.Services.AddSingleton<ITranscriptAnalyzerService, TranscriptAnalyzerService>();
 builder.Services.AddSingleton<IStorageAccountRepository, StorageAccountRepository>();
 builder.Services.AddSingleton<IContentUnderstandingRepository, ContentUnderstandingRepository>();
 

@@ -14,7 +14,7 @@ namespace TranscriptAnalyzer.POC.Infrastructure.Repositories
             List<string> result = [];
             var analyzers = _client.GetAnalyzersAsync();
             var contentAnalyzers = await analyzers.ToListAsync();
-            foreach (var item in contentAnalyzers.Where(e => e.AnalyzerId.Contains("document") || e.AnalyzerId.Contains("transcript")).ToList())
+            foreach (var item in contentAnalyzers.Where(e => e.AnalyzerId.Contains("transcript")).ToList().OrderByDescending(e => e.CreatedAt))
                 result.Add(item.AnalyzerId);
 
             return result;

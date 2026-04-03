@@ -5,26 +5,58 @@
 }
 
 <div class="container mt-5">
-    <h2>Upload PDF Transcript</h2>
-    <form id="uploadForm" enctype="multipart/form-data" method="post">
-        <div id="drop-area" style="border: 2px dashed #ccc; padding: 40px; text-align: center;">
-            <p>Drag & drop a PDF file here or click to select</p>
-            <input type="file" id="fileInput" name="pdfFile" accept="application/pdf" style="display:none;" />
-            <button type="button" onclick="document.getElementById('fileInput').click();">Choose File</button>
-            <div id="fileName"></div>
-        </div>
-        <button type="submit" class="btn btn-primary mt-3">Submit</button>
-    </form>
 
     @if (Model.PdfUrl != null)
     {
-        <div class="mt-4">
-            <h4>PDF Preview</h4>
-            <iframe src="@Model.PdfUrl" width="100%" height="800px" style="border:1px solid #ccc;"></iframe>
-        </div>
+        <form id="analyzerForm" method="post">
+            <div class="mb-3">
+                <label for="analyzerSelect" class="form-label"><strong>Select Analyzer:</strong></label>
+                <select id="analyzerSelect" name="SelectedAnalyzer" class="form-select" asp-for="SelectedAnalyzer" asp-items="@(new SelectList(Model.Analyzers))">
+                    @foreach (var analyzer in Model.Analyzers)
+                    {
+                        <option value="@analyzer">@analyzer</option>
+                    }
+                </select>
+            </div>
+
+            <input type="hidden" id="pdfUrl" name="PdfUrl" asp-for="PdfUrl" />
+
+            <div class="mt-4">
+                <h4>PDF Preview</h4>
+                <iframe src="@Model.PdfUrl" width="100%" height="800px" style="border:1px solid #ccc;"></iframe>
+            </div>
+        </form>
+
+        @if (Model.TranscriptCourses.Count == 0)
+        {
+            <button id="analyzeBtn" class="btn btn-success mb-3" @(Model.PdfUrl == null ? "disabled" : null) onclick="analyzeDocument(event)">Analyze Document</button>
+        }
+        
+    }
+    else
+    {
+        <h2>Upload PDF Transcript</h2>
+        <form id="uploadForm" enctype="multipart/form-data" method="post">
+            <div id="drop-area" style="border: 2px dashed #ccc; padding: 40px; text-align: center;">
+                <p>Drag & drop a PDF file here or click to select</p>
+                <input type="file" id="fileInput" name="pdfFile" accept="application/pdf" style="display:none;" />
+                <button type="button" onclick="document.getElementById('fileInput').click();">Choose File</button>
+                <div id="fileName"></div>
+            </div>
+            <button type="submit" class="btn btn-primary mt-3">Submit</button>
+        </form>
     }
 
     <hr />
+
+    
+
+    <div id="loader" style="display:none;position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(255,255,255,0.7);z-index:9999;text-align:center;">
+        <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:2rem;">
+            <span class="spinner-border"></span>
+            <div>Loading..</div>
+        </div>
+    </div>
 
     @if (Model.TranscriptCourses.Count > 0)
     {
@@ -34,30 +66,26 @@
                 <tr>
                     <th>Month</th>
                     <th>Year</th>
-                    <th>Title</th>
                     <th>Code</th>
-                    <th>Credits</th>
+                    <th>Title</th>
                     <th>Grade</th>
+                    <th>Credits</th>
                     <th>Calendar System</th>
                 </tr>
             </thead>
             <tbody>
-
-                @{
-                    // Loop through the transcript courses and display them
-                    foreach (var course in Model.TranscriptCourses)
-                    {
-                        <tr>
-                            <td>@course.Month</td>
-                            <td>@course.Year</td>
-                            <td>@course.Title</td>
-                            <td>@course.Code</td>
-                            <td>@course.Credits</td>
-                            <td>@course.Grade</td>
-                            <td>@course.CalendarSystem</td>
-                        </tr>
-                    }
-                }                
+                @foreach (var course in Model.TranscriptCourses)
+                {
+                    <tr>
+                        <td>@course.Month</td>
+                        <td>@course.Year</td>
+                        <td>@course.Code</td>
+                        <td>@course.Title</td>
+                        <td>@course.Grade</td>
+                        <td>@course.Credits</td>
+                        <td>@course.CalendarSystem</td>
+                    </tr>
+                }
             </tbody>
         </table>
     }
@@ -93,5 +121,45 @@
                 fileNameDiv.textContent = fileInput.files[0].name;
             }
         });
+
+        function analyzeDocument(event) {
+            event.preventDefault();
+            document.getElementById('loader').style.display = 'block';
+            // Submit a form to trigger the analyze action
+            var form = document.createElement('form');
+            form.method = 'post';
+            form.action = '?handler=Analyze';
+            form.style.display = 'none';
+            // Add anti-forgery token if present
+            var token = document.querySelector('input[name="__RequestVerificationToken"]');
+            if (token) {
+                var input = document.createElement('input');
+                input.type = 'hidden';
+                input.name = '__RequestVerificationToken';
+                input.value = token.value;
+                form.appendChild(input);
+            }
+            // Add selected analyzer
+            var analyzerSelect = document.getElementById('analyzerSelect');
+            if (analyzerSelect) {
+                var selected = document.createElement('input');
+                selected.type = 'hidden';
+                selected.name = 'SelectedAnalyzer';
+                selected.value = analyzerSelect.value;
+                form.appendChild(selected);
+            }
+
+            var pdfUrlEl = document.getElementById('pdfUrl');
+            if (pdfUrlEl) {
+                var pdfInput = document.createElement('input');
+                pdfInput.type = 'hidden';
+                pdfInput.name = 'PdfUrl';
+                pdfInput.value = pdfUrlEl.value;
+                form.appendChild(pdfInput);
+            }
+
+            document.body.appendChild(form);
+            form.submit();
+        }
     </script>
 }

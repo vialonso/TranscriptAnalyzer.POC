@@ -2,6 +2,9 @@
 {
     public interface ITranscriptAnalyzerService
     {
-        Task<List<Domain.Entities.TranscriptCourse>> GetTranscriptCourses(string fileUrl);
+
+        Task<List<string>> GetAnalyzers();
+
+        Task<List<Domain.Entities.TranscriptCourse>> GetTranscriptCourses(string fileUrl, string analyzerId);
     }
 }
