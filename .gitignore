@@ -416,3 +416,5 @@ FodyWeavers.xsd
 *.msix
 *.msm
 *.msp
+/src/TranscriptAnalyzer.POC.Web/Properties/launchSettings.json
+/src/TranscriptAnalyzer.POC.Setup/Properties/launchSettings.json

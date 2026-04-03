@@ -20,8 +20,12 @@
     <File Path="documents/Inst_19586-DocType_918.pdf" />
   </Folder>
   <Folder Name="/src/">
-    <Project Path="src/TranscriptAnalyzer.POC.Setup/TranscriptAnalyzer.POC.Setup.csproj" />
+    <Project Path="src/TranscriptAnalyzer.POC.Application/TranscriptAnalyzer.POC.Application.csproj" Id="b5fd4d2e-43a9-4a03-9835-e6938cfcb202" />
+    <Project Path="src/TranscriptAnalyzer.POC.Domain/TranscriptAnalyzer.POC.Domain.csproj" Id="a4bb284d-765e-4ce2-b21c-0445366a0a07" />
+    <Project Path="src/TranscriptAnalyzer.POC.Infrastructure/TranscriptAnalyzer.POC.Infrastructure.csproj" Id="b3e22835-cac5-4324-b8cb-ed2f6b7429b5" />
     <Project Path="src/TranscriptAnalyzer.POC.Web/TranscriptAnalyzer.POC.Web.csproj" Id="3fdc4e59-8e92-40a4-a334-410af3ee7e29" />
-    <Project Path="src/TranscriptAnalyzer.POC/TranscriptAnalyzer.POC.csproj" />
+  </Folder>
+  <Folder Name="/src/setup/">
+    <Project Path="src/TranscriptAnalyzer.POC.Setup/TranscriptAnalyzer.POC.Setup.csproj" />
   </Folder>
 </Solution>
