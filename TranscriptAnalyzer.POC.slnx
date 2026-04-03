@@ -1,0 +1,27 @@
+<Solution>
+  <Folder Name="/documents/">
+    <File Path="documents/Inst_10050-DocType_1952.pdf" />
+    <File Path="documents/Inst_13881-DocType_976.pdf" />
+    <File Path="documents/Inst_14761-DocType_976.pdf" />
+    <File Path="documents/Inst_15844-DocType_1065.pdf" />
+    <File Path="documents/Inst_15844-DocType_927.pdf" />
+    <File Path="documents/Inst_16250-DocType_1664.pdf" />
+    <File Path="documents/Inst_16250-DocType_181.pdf" />
+    <File Path="documents/Inst_16366-DocType_1859.pdf" />
+    <File Path="documents/Inst_16735-DocType_1948.pdf" />
+    <File Path="documents/Inst_16735-DocType_979.pdf" />
+    <File Path="documents/Inst_18425-DocType_1015.pdf" />
+    <File Path="documents/Inst_19053-DocType_2070.pdf" />
+    <File Path="documents/Inst_19053-DocType_2975.pdf" />
+    <File Path="documents/Inst_19068-DocType_1949.pdf" />
+    <File Path="documents/Inst_19339-DocType_2210.pdf" />
+    <File Path="documents/Inst_19339-DocType_2477.pdf" />
+    <File Path="documents/Inst_19339-DocType_988.pdf" />
+    <File Path="documents/Inst_19586-DocType_918.pdf" />
+  </Folder>
+  <Folder Name="/src/">
+    <Project Path="src/TranscriptAnalyzer.POC.Setup/TranscriptAnalyzer.POC.Setup.csproj" />
+    <Project Path="src/TranscriptAnalyzer.POC.Web/TranscriptAnalyzer.POC.Web.csproj" Id="3fdc4e59-8e92-40a4-a334-410af3ee7e29" />
+    <Project Path="src/TranscriptAnalyzer.POC/TranscriptAnalyzer.POC.csproj" />
+  </Folder>
+</Solution>
