@@ -47,3 +47,15 @@ I want to build a solution using Content undersanding in Azure Fundry:
 * Task: Before implementing this solution directly in my blurprint application, I want to write a simple .NET console application. It will work as simple as just reading a PDF and returns the final JSON result I want for bluprint.
 
     * Give me me a step by step guide to accomplish this.
+
+--
+
+I'm building the solution using Azure Content Understanding and I'm creating the analyzer that will extract course data from transcripts
+
+	* Month: The month when the course was taken.
+	* Year: The Year when the course was taken.
+	* Code: The course code.
+	* Title: The title of the course.
+	* Grade: The grade the student got (example: A, A+, A-, B, C, etc)
+	* Credits: A numeric vaue for the credits earned.
+	* Calendar System: It can be Quarter, Semester, Trimester, Quarted Calculated.

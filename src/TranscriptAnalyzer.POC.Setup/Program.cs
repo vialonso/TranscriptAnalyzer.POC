@@ -32,10 +32,22 @@ while (option != "4")
             break;
         case "4":
             break;
+        case "delete":
+            await DeleteAnalyzer();
+            break;
         default:
             Console.WriteLine("Invalid option selected.");
             break;
     }
+}
+
+async Task DeleteAnalyzer()
+{
+    Console.WriteLine("--------------------");
+    Console.Write("Type Analyzer ID to delete: ");
+    string analyzerId = Console.ReadLine() ?? throw new Exception("Analyzer ID is required");
+    await client.DeleteAnalyzerAsync(analyzerId);
+    Console.WriteLine($"Analyzer '{analyzerId}' deleted successfully!");
 }
 
 async Task ListAnalyzers()
@@ -196,7 +208,7 @@ static async Task<string> CreateCustomAnalyzer(ContentUnderstandingClient client
     var customAnalyzer = new ContentAnalyzer
     {
         BaseAnalyzerId = "prebuilt-document",
-        Description = "Custom analyzer for extracting a list of courses from student transcripts",
+        Description = "An analyzer for extracting a list of courses, from student transcripts",
         Config = config,
         FieldSchema = fieldSchema
     };

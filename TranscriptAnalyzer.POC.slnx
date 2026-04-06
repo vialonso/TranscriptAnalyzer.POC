@@ -19,6 +19,9 @@
     <File Path="documents/Inst_19339-DocType_988.pdf" />
     <File Path="documents/Inst_19586-DocType_918.pdf" />
   </Folder>
+  <Folder Name="/misc/">
+    <File Path="misc/prompt.md" />
+  </Folder>
   <Folder Name="/src/">
     <Project Path="src/TranscriptAnalyzer.POC.Application/TranscriptAnalyzer.POC.Application.csproj" Id="b5fd4d2e-43a9-4a03-9835-e6938cfcb202" />
     <Project Path="src/TranscriptAnalyzer.POC.Domain/TranscriptAnalyzer.POC.Domain.csproj" Id="a4bb284d-765e-4ce2-b21c-0445366a0a07" />
