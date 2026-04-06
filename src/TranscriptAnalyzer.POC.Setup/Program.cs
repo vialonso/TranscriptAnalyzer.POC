@@ -111,13 +111,17 @@ static async Task<string> CreateCustomAnalyzer(ContentUnderstandingClient client
     {
         Type = ContentFieldType.Array,
         Method = GenerationMethod.Generate,
-        Description = "The list of courses taken by the student in the transcript document",
+        Description = 
+        @"Extract an array named 'Courses' containing all courses listed in the student's transcript. 
+        Each item should represent a single course the student has taken, as detailed in the transcript document.",
         EstimateSourceAndConfidence = true
     };
 
     var courseItemFieldDef = new ContentFieldDefinition
     {
-        Description = "The definition of each course item in the courses array",
+        Description = 
+        @"Defines the structure and properties of a single course entry within the 'Courses' array, as found in the transcript. 
+        Each property should be extracted or generated based on the transcript's content.",
         Type = ContentFieldType.Object,
         Method = GenerationMethod.Generate,
         EstimateSourceAndConfidence = true
@@ -125,7 +129,9 @@ static async Task<string> CreateCustomAnalyzer(ContentUnderstandingClient client
 
     courseItemFieldDef.Properties.Add("Month", new ContentFieldDefinition
     {
-        Description = "The month when the course was taken, the value must be an integer from 1 to 12",
+        Description = 
+        @"The numeric month (1-12) indicating when the course was taken, as specified in the transcript. 
+        If not explicitly stated, infer from context if possible.",
         Type = ContentFieldType.Integer,
         Method = GenerationMethod.Generate,
         EstimateSourceAndConfidence = true
@@ -133,7 +139,9 @@ static async Task<string> CreateCustomAnalyzer(ContentUnderstandingClient client
 
     courseItemFieldDef.Properties.Add("Year", new ContentFieldDefinition
     {
-        Description = "The year when the course was taken, the value must be an integer with 4 digits",
+        Description = 
+        @"The four-digit year (e.g., 2023) when the course was taken, as shown in the transcript. 
+        Extract this value directly from the document.",
         Type = ContentFieldType.Integer,
         Method = GenerationMethod.Extract,
         EstimateSourceAndConfidence = true
@@ -141,7 +149,8 @@ static async Task<string> CreateCustomAnalyzer(ContentUnderstandingClient client
 
     courseItemFieldDef.Properties.Add("Code", new ContentFieldDefinition
     {
-        Description = "The code of the course taken by the student",
+        Description = 
+        "The official course code or identifier (e.g., 'MATH101') as listed in the transcript for the course.",
         Type = ContentFieldType.String,
         Method = GenerationMethod.Extract,
         EstimateSourceAndConfidence = true
@@ -149,7 +158,8 @@ static async Task<string> CreateCustomAnalyzer(ContentUnderstandingClient client
 
     courseItemFieldDef.Properties.Add("Title", new ContentFieldDefinition
     {
-        Description = "The title of the course taken by the student",
+        Description = 
+        @"The full title or name of the course as it appears in the transcript.",
         Type = ContentFieldType.String,
         Method = GenerationMethod.Extract,
         EstimateSourceAndConfidence = true
@@ -157,7 +167,8 @@ static async Task<string> CreateCustomAnalyzer(ContentUnderstandingClient client
 
     courseItemFieldDef.Properties.Add("Grade", new ContentFieldDefinition
     {
-        Description = "The grade of the course taken by the student, the value can be either a letter grade (A, B, C, D, F) or a percentage (0-100%)",
+        Description = 
+        @"The grade received for the course, which may be a letter grade (A, B, C, D, F) or a percentage (0-100%), as recorded in the transcript.",
         Type = ContentFieldType.String,
         Method = GenerationMethod.Extract,
         EstimateSourceAndConfidence = true
@@ -165,7 +176,8 @@ static async Task<string> CreateCustomAnalyzer(ContentUnderstandingClient client
 
     courseItemFieldDef.Properties.Add("Credits", new ContentFieldDefinition
     {
-        Description = "The number of credits of the course earned by the student",
+        Description = 
+        @"The number of academic credits earned for the course, as specified in the transcript. This is typically a numeric value.",
         Type = ContentFieldType.Number,
         Method = GenerationMethod.Extract,
         EstimateSourceAndConfidence = true
@@ -174,7 +186,9 @@ static async Task<string> CreateCustomAnalyzer(ContentUnderstandingClient client
 
     var calendarSystemFieldDef = new ContentFieldDefinition
     {
-        Description = "The calendar system used in the transcript document for the course taken by the student, the value can be either 'Quarter', 'Semester', 'Trimester' or 'Quarted Calculated'",
+        Description = 
+        @"The academic calendar system used for the course, as indicated in the transcript. 
+        Valid values are: 'Quarter', 'Semester', 'Trimester', or 'Quarted Calculated'.",
         Type = ContentFieldType.String,
         Method = GenerationMethod.Generate,
         EstimateSourceAndConfidence = true
@@ -208,7 +222,10 @@ static async Task<string> CreateCustomAnalyzer(ContentUnderstandingClient client
     var customAnalyzer = new ContentAnalyzer
     {
         BaseAnalyzerId = "prebuilt-document",
-        Description = "An analyzer for extracting a list of courses, from student transcripts",
+        Description = 
+        @"Custom analyzer for extracting a detailed, structured list of all courses from student transcript documents. 
+        The analyzer identifies each course and its associated properties,
+        including code, title, grade, credits, date taken, and academic calendar system, based on the transcript's content.",
         Config = config,
         FieldSchema = fieldSchema
     };
@@ -255,6 +272,10 @@ static async Task<string> CreateCustomAnalyzer(ContentUnderstandingClient client
 
     return analyzerId;
 }
+
+
+
+
 
 
 
