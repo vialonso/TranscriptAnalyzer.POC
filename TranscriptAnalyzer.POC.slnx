@@ -22,7 +22,8 @@
   <Folder Name="/misc/">
     <File Path="misc/prompt.md" />
   </Folder>
-  <Folder Name="/src/">
+  <Folder Name="/src/" />
+  <Folder Name="/src/app/">
     <Project Path="src/TranscriptAnalyzer.POC.Application/TranscriptAnalyzer.POC.Application.csproj" Id="b5fd4d2e-43a9-4a03-9835-e6938cfcb202" />
     <Project Path="src/TranscriptAnalyzer.POC.Domain/TranscriptAnalyzer.POC.Domain.csproj" Id="a4bb284d-765e-4ce2-b21c-0445366a0a07" />
     <Project Path="src/TranscriptAnalyzer.POC.Infrastructure/TranscriptAnalyzer.POC.Infrastructure.csproj" Id="b3e22835-cac5-4324-b8cb-ed2f6b7429b5" />

@@ -64,8 +64,7 @@
         <table class="table table-bordered mt-3">
             <thead>
                 <tr>
-                    <th>Month</th>
-                    <th>Year</th>
+                    <th>Date</th>
                     <th>Code</th>
                     <th>Title</th>
                     <th>Grade</th>
@@ -77,8 +76,7 @@
                 @foreach (var course in Model.TranscriptCourses)
                 {
                     <tr>
-                        <td>@course.Month</td>
-                        <td>@course.Year</td>
+                        <td>@($"{course.Month}/{course.Year}")</td>
                         <td>@course.Code</td>
                         <td>@course.Title</td>
                         <td>@course.Grade</td>
