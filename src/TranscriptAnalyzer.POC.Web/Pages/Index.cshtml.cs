@@ -6,11 +6,14 @@ using TranscriptAnalyzer.POC.Domain.Entities;
 namespace TranscriptAnalyzer.POC.Web.Pages
 {
     public class IndexModel(
+        ILogger<IndexModel> logger,
         IBlobStorageService blobStorageService,
         ITranscriptAnalyzerService transcriptAnalyzerService
         ) : PageModel
     {
 
+
+        private readonly ILogger<IndexModel> _logger = logger;
         private readonly IBlobStorageService _blobStorageService = blobStorageService;
         private readonly ITranscriptAnalyzerService _transcriptAnalyzerService = transcriptAnalyzerService;
 

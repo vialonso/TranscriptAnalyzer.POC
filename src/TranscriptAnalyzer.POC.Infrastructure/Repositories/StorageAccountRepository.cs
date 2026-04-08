@@ -11,7 +11,7 @@ namespace TranscriptAnalyzer.POC.Infrastructure.Repositories
 
         public async Task<string> UploadFileAsync(Stream fileStream, string fileName, string contentType)
         {
-
+            
             var containerClient = _blobServiceClient.GetBlobContainerClient(_containerName);
             await containerClient.CreateIfNotExistsAsync(PublicAccessType.Blob);
             var blobClient = containerClient.GetBlobClient(fileName);

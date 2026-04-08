@@ -4,7 +4,14 @@
     <TargetFramework>net10.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
+    <ApplicationInsightsResourceId>/subscriptions/0bc81480-3ae2-48c0-8b57-07391ab8d81f/resourceGroups/rg-poc-transcript-analyzer/providers/microsoft.insights/components/app-insights-transcript-analyzer</ApplicationInsightsResourceId>
+    <UserSecretsId>2ce6abc6-5eaa-4438-9f70-7098e4d7b2c8</UserSecretsId>
   </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Azure.Identity" Version="1.17.0" />
+    <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.23.0" />
+  </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\TranscriptAnalyzer.POC.Application\TranscriptAnalyzer.POC.Application.csproj" />

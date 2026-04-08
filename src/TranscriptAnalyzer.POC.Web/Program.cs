@@ -1,29 +1,27 @@
-using Azure;
-using Azure.AI.ContentUnderstanding;
-using TranscriptAnalyzer.POC.Application.Interfaces.Repositories;
-using TranscriptAnalyzer.POC.Application.Interfaces.Services;
-using TranscriptAnalyzer.POC.Application.Services;
-using TranscriptAnalyzer.POC.Infrastructure.Repositories;
+using Microsoft.AspNetCore.Diagnostics;
+using Serilog;
+using TranscriptAnalyzer.POC.Infrastructure.Application;
+using TranscriptAnalyzer.POC.Infrastructure.Configuration;
+using TranscriptAnalyzer.POC.Infrastructure.DependencyInjection;
+using TranscriptAnalyzer.POC.Infrastructure.Logging;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+builder.Services.AddStartupSerilogLogging();
+builder.Configuration.AddConfigurationJsonFiles();
+builder.Host.UseSerilog();
+
 builder.Services.AddRazorPages();
-builder.Services.AddSingleton<IBlobStorageService, BlobStorageService>();
-builder.Services.AddSingleton<ITranscriptAnalyzerService, TranscriptAnalyzerService>();
-builder.Services.AddSingleton<IStorageAccountRepository, StorageAccountRepository>();
-builder.Services.AddSingleton<IContentUnderstandingRepository, ContentUnderstandingRepository>();
 
-var blobServiceClient = new Azure.Storage.Blobs.BlobServiceClient(Environment.GetEnvironmentVariable("AzureBlobStorage"));
-builder.Services.AddSingleton(blobServiceClient);
+builder.Services.AddInfrastructure(builder.Configuration);
 
-string contentUnderstandingEndpoint = Environment.GetEnvironmentVariable("CONTENTUNDERSTANDING_ENDPOINT") ?? throw new Exception("CONTENTUNDERSTANDING_ENDPOINT NOT FOUND");
-string contentUnderstandingKey = Environment.GetEnvironmentVariable("CONTENTUNDERSTANDING_KEY") ?? throw new Exception("CONTENTUNDERSTANDING_KEY NOT FOUND");
-var contentUnderstandingClient = new ContentUnderstandingClient(new Uri(contentUnderstandingEndpoint), new AzureKeyCredential(contentUnderstandingKey));
-
-builder.Services.AddSingleton(contentUnderstandingClient);
+builder.Services.AddApplicationInsightsTelemetry(new Microsoft.ApplicationInsights.AspNetCore.Extensions.ApplicationInsightsServiceOptions
+{
+    ConnectionString = builder.Configuration["APPLICATIONINSIGHTS_CONNECTION_STRING"]
+});
 
 var app = builder.Build();
+
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
@@ -33,13 +31,34 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 
+
+app.UseSerilogEnrichers();
+app.UseAppMiddleWares();
+
+app.UseExceptionHandler(appErr =>
+{
+    appErr.Run(async ctx =>
+    {
+        var ex = ctx.Features.Get<IExceptionHandlerFeature>()?.Error;
+        Log.ForContext("Path", ctx.Request.Path)
+           .ForContext("CorrelationId", ctx.TraceIdentifier)
+           .Error(ex, "Unhandled exception");
+        ctx.Response.StatusCode = 500;
+        await ctx.Response.WriteAsJsonAsync(new
+        {
+            type = "about:blank",
+            title = "An error occurred.",
+            status = 500,
+            traceId = ctx.TraceIdentifier
+        });
+    });
+});
+
 app.UseHttpsRedirection();
-
 app.UseRouting();
-
 app.UseAuthorization();
-
 app.MapStaticAssets();
+
 app.MapRazorPages()
    .WithStaticAssets();
 
