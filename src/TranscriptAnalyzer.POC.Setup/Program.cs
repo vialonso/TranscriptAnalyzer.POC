@@ -3,6 +3,7 @@ using Azure.AI.ContentUnderstanding;
 using Azure.Storage.Blobs;
 using TranscriptAnalyzer.POC.Application.Services;
 using TranscriptAnalyzer.POC.Infrastructure.Repositories;
+using Microsoft.Extensions.Logging;
 
 string endpoint = Environment.GetEnvironmentVariable("CONTENTUNDERSTANDING_ENDPOINT") ?? throw new Exception("CONTENTUNDERSTANDING_ENDPOINT NOT FOUND");
 string key = Environment.GetEnvironmentVariable("CONTENTUNDERSTANDING_KEY") ?? throw new Exception("CONTENTUNDERSTANDING_KEY NOT FOUND");
@@ -53,7 +54,10 @@ async Task DeleteAnalyzer()
 async Task ListAnalyzers()
 {
     Console.WriteLine("--------------------");
-    ContentUnderstandingRepository contentUnderstandingRepository = new(client);
+
+    ContentUnderstandingRepository contentUnderstandingRepository = new(
+        LoggerFactory.Create(builder => builder.AddConsole()).CreateLogger<ContentUnderstandingRepository>(), client);
+
     var analyzers = await contentUnderstandingRepository.GetAnalyzers();
     Console.WriteLine($"Found {analyzers.Count} analyzers:");
     analyzers.ForEach(analyzer => Console.WriteLine($"- {analyzer}"));
@@ -82,8 +86,10 @@ async Task AnalyzeTranscript()
 
     using var stream = File.OpenRead(filePath);
 
+    
     BlobStorageService blobStorageService = new(
         new StorageAccountRepository(
+            LoggerFactory.Create(builder => builder.AddConsole()).CreateLogger<StorageAccountRepository>(),
             new BlobServiceClient(
                 Environment.GetEnvironmentVariable("AzureBlobStorage") ?? throw new Exception("AzureBlobStorage NOT FOUND"))));
 
@@ -91,7 +97,11 @@ async Task AnalyzeTranscript()
     var blobUrl = await blobStorageService.UploadFileAsync(stream, "application/pdf");
 
 
-    ContentUnderstandingRepository contentUnderstandingRepository = new(client);
+    ContentUnderstandingRepository contentUnderstandingRepository = new(
+        LoggerFactory.Create(builder => builder.AddConsole()).CreateLogger<ContentUnderstandingRepository>(),
+        client);
+
+
     var courses = await contentUnderstandingRepository.TryGetTranscriptCoursesFromDocument(blobUrl, analyzerId);
     Console.WriteLine($"Extracted {courses.Count} courses:");
     courses.ForEach(course =>
@@ -272,6 +282,14 @@ static async Task<string> CreateCustomAnalyzer(ContentUnderstandingClient client
 
     return analyzerId;
 }
+
+
+
+
+
+
+
+
 
 
 

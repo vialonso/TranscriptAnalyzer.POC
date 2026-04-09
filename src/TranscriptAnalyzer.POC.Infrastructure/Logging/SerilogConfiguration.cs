@@ -29,12 +29,24 @@ namespace TranscriptAnalyzer.POC.Infrastructure.Logging
         {
             host.UseSerilog((ctx, cfg) =>
             {
-                cfg.ReadFrom.Configuration(ctx.Configuration)                      // appsettings.json
+                cfg
+                   .MinimumLevel.Warning()
+                   .MinimumLevel.Override("TranscriptAnalyzer.POC.Web", LogEventLevel.Information)
+                   .MinimumLevel.Override("TranscriptAnalyzer.POC.Infrastructure", LogEventLevel.Information)
+                   .MinimumLevel.Override("Microsoft", LogEventLevel.Warning)
                    .Enrich.FromLogContext()
+                   .Enrich.WithMachineName()
+                   .Enrich.WithProcessId()
+                   .Enrich.WithThreadId()
+                   .Enrich.WithEnvironmentVariable(environmentVariableName: "ASPNETCORE_ENVIRONMENT", propertyName: "ASPNETCORE_ENVIRONMENT")
                    .Enrich.With(new RedactEnricher(["password", "token", "authorization", "ssn"]))
                    .Enrich.WithProperty("Application", ctx.HostingEnvironment.ApplicationName)
-                   .Enrich.WithProperty("Environment", ctx.HostingEnvironment.EnvironmentName);
-                   //.WriteTo.Console(new Serilog.Formatting.Json.JsonFormatter());
+                   .Enrich.WithProperty("Environment", ctx.HostingEnvironment.EnvironmentName)
+                   .WriteTo.Console(new Serilog.Formatting.Json.JsonFormatter())
+                   .WriteTo.ApplicationInsights(
+                       ctx.Configuration["APPLICATIONINSIGHTS_CONNECTION_STRING"],
+                       TelemetryConverter.Traces
+                   );
                 // Optional sinks:
                 // .WriteTo.Seq(ctx.Configuration["Seq:Url"] ?? "http://localhost:5341")
                 // .WriteTo.File("logs/log-.ndjson", rollingInterval: RollingInterval.Day);

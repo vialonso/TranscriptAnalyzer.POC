@@ -43,6 +43,7 @@ namespace TranscriptAnalyzer.POC.Web.Pages
                 // get the stream of the uploaded file
                 using var stream = PdfFile.OpenReadStream();
                 PdfUrl = await _blobStorageService.UploadFileAsync(stream, PdfFile.ContentType);
+                _logger.LogInformation("File uploaded successfully. URL: {PdfUrl}", PdfUrl);
             }
             Analyzers = await _transcriptAnalyzerService.GetAnalyzers();
             return Page();
