@@ -24,7 +24,7 @@ namespace TranscriptAnalyzer.POC.Infrastructure.Repositories
             try
             {
                 var containerClient = _blobServiceClient.GetBlobContainerClient(_containerName);
-                await containerClient.CreateIfNotExistsAsync(PublicAccessType.Blob);
+                //await containerClient.CreateIfNotExistsAsync(PublicAccessType.Blob);
                 var blobClient = containerClient.GetBlobClient(fileName);
                 var blobHttpHeader = new BlobHttpHeaders { ContentType = contentType };
                 await blobClient.UploadAsync(fileStream, new BlobUploadOptions { HttpHeaders = blobHttpHeader });
@@ -32,7 +32,9 @@ namespace TranscriptAnalyzer.POC.Infrastructure.Repositories
 
                 _logger.LogInformation("File upload completed in {ElapsedMilliseconds} ms. Blob URL: {BlobUrl}", sw.ElapsedMilliseconds, blobClient.Uri);
 
-                return blobClient.Uri.ToString();
+                var sasToken = blobClient.GenerateSasUri(Azure.Storage.Sas.BlobSasPermissions.Read, DateTimeOffset.UtcNow.AddHours(1));
+
+                return sasToken.ToString();
             }
             catch (Exception ex)
             {
